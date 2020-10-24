@@ -1,7 +1,8 @@
+pub mod vec3;
+
 pub mod create_ppm {
 
-use std::io::prelude::*;
-use std::fmt;
+    use std::fmt;
 
     struct Image(u16, u16);
 
@@ -11,17 +12,16 @@ use std::fmt;
         }
     }
 
-    pub fn new_image() -> std::io::Result<()> {
-
-        let mut stdout = std::io::stdout();
+    /// Creates a simple test image
+    pub fn test_image() {
 
         let image = Image(256, 256);
 
-        // stdout.write(b"hello?").expect("Couldn't write to stdout.");
-        write!(&mut stdout, "P3\n{} {}\n255\n", image.0, image.1)?;
+        print!("P3\n{} {}\n255\n", image.0, image.1);
 
-        for i in 0..image.0 - 1 {
-            for j in 0..image.1 {
+        for j in (0..image.0 - 1).rev() {
+            eprintln!("\rScanlines remaining: {}", j);
+            for i in 0..image.1 {
                 let r = i as f32 / (image.0 as f32 - 1.0);
                 let g = j as f32 / (image.1 as f32 - 1.0);
                 let b = 0.25;
@@ -30,10 +30,9 @@ use std::fmt;
                 let ig = (255.999 * g) as u16;
                 let ib = (255.999 * b) as u16;
 
-                write!(&mut stdout, "{} {} {}\n", ir, ig, ib)?;
+                print!("{} {} {}\n", ir, ig, ib);
             }
         }
-        
-        Ok(())
+        eprint!("\nDone.\n");
     }
 }
