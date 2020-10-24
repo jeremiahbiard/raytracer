@@ -1,3 +1,5 @@
+#[allow(unused_imports)]
+
 use raytracer::create_ppm;
 use raytracer::vec3::Vec3;
 
