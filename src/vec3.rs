@@ -1,4 +1,6 @@
-use std::ops::{Add, AddAssign};
+use std::ops::{Add, AddAssign, MulAssign};
+
+extern crate math;
 
 #[derive(Copy, Clone, PartialEq, PartialOrd, Default, Debug)]
 pub struct Vec3 {
@@ -29,6 +31,16 @@ impl AddAssign for Vec3 {
     }
 }
 
+impl MulAssign<f64> for Vec3 {
+    fn mul_assign(&mut self, s: f64) {
+        *self = Self {
+            x: self.x * s,
+            y: self.y * s,
+            z: self.z * s,
+        }
+    }
+}
+
 impl Vec3 {
     pub fn new() -> Vec3 {
         Vec3::default()
@@ -39,15 +51,13 @@ impl Vec3 {
         Vec3 { x, y, z }
     }
 
-    pub fn scalar_multiply(&mut self, s: f64) {
+    pub fn scalar_mult(&mut self, s: f64) {
         *self = Self {
-        x: self.x * s,
-        y: self.y * s,
-        z: self.z * s,
+            x: self.x * s,
+            y: self.y * s,
+            z: self.z * s,
         };
     }
-
-
 }
 
 #[cfg(test)]
@@ -88,7 +98,7 @@ mod test {
     fn multiply_by_scalar() {
         let mut v1 = Vec3::vec_with_xyz(1.0, 1.0, 1.0);
         let v2 = Vec3::vec_with_xyz(3.0, 3.0, 3.0);
-        v1.scalar_multiply(3.0);
+        v1 *= 3.0;
         assert_eq!(v1, v2);
     }
 }
