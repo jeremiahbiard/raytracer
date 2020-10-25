@@ -1,10 +1,14 @@
 pub mod vec3;
 
-pub mod create_ppm {
-
+#[allow(dead_code)]
+pub mod renderer {
     use std::fmt;
 
     struct Image(u16, u16);
+    struct Color(f64, f64, f64);
+
+    const IMAGE_HEIGHT: i32 = 256;
+    const IMAGE_WIDTH: i32 = 256;
 
     impl fmt::Display for Image {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -12,8 +16,7 @@ pub mod create_ppm {
         }
     }
 
-    /// Creates a simple test image
-    pub fn test_image() {
+    pub fn render() {
         let image = Image(256, 256);
 
         print!("P3\n{} {}\n255\n", image.0, image.1);
@@ -33,5 +36,17 @@ pub mod create_ppm {
             }
         }
         eprint!("\nDone.\n");
+    }
+
+    fn pixel_color(i: i32, j: i32) -> Color {
+        Color(
+            i as f64 / (IMAGE_WIDTH - 1) as f64,
+            j as f64 / (IMAGE_HEIGHT - 1) as f64,
+            0.25,
+        )
+    }
+
+    fn write_pixel(color: Color) {
+        print!("{} {} {}\n", color.0, color.1, color.2);
     }
 }
