@@ -1,6 +1,6 @@
 use std::ops::*;
 
-extern crate math;
+// extern crate math;
 
 #[derive(Copy, Clone, PartialEq, PartialOrd, Default, Debug)]
 pub struct Vec3 {
@@ -8,6 +8,8 @@ pub struct Vec3 {
     y: f64,
     z: f64,
 }
+
+pub type Point3 = Vec3;
 
 impl Add for Vec3 {
     type Output = Self;
