@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, MulAssign};
+use std::ops::{Add, AddAssign, MulAssign, DivAssign};
 
 extern crate math;
 
@@ -32,11 +32,21 @@ impl AddAssign for Vec3 {
 }
 
 impl MulAssign<f64> for Vec3 {
-    fn mul_assign(&mut self, s: f64) {
+    fn mul_assign(&mut self, rhs: f64) {
         *self = Self {
-            x: self.x * s,
-            y: self.y * s,
-            z: self.z * s,
+            x: self.x * rhs,
+            y: self.y * rhs,
+            z: self.z * rhs,
+        }
+    }
+}
+
+impl DivAssign<f64> for Vec3 {
+    fn div_assign(&mut self, rhs: f64) {
+        *self = Self {
+            x: self.x / rhs,
+            y: self.y / rhs,
+            z: self.z / rhs,
         }
     }
 }
@@ -52,6 +62,7 @@ impl Vec3 {
         Vec3 { x, y, z }
     }
 
+    /// Create a new unit vector
     pub fn unit_vector() -> Vec3 {
         Vec3 { x: 1.0, y: 1.0, z: 1.0 }
     }
