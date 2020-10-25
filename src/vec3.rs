@@ -50,14 +50,6 @@ impl Vec3 {
     pub fn vec_with_xyz(x: f64, y: f64, z: f64) -> Vec3 {
         Vec3 { x, y, z }
     }
-
-    pub fn scalar_mult(&mut self, s: f64) {
-        *self = Self {
-            x: self.x * s,
-            y: self.y * s,
-            z: self.z * s,
-        };
-    }
 }
 
 #[cfg(test)]
@@ -65,7 +57,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn check_default() {
+    fn default() {
         let test_vec = Vec3::new();
         assert_eq!(test_vec.x, 0.0);
         assert_eq!(test_vec.y, 0.0);
@@ -87,7 +79,7 @@ mod test {
     }
 
     #[test]
-    fn vec3_add_assign() {
+    fn add_assign() {
         let mut uut1 = Vec3::vec_with_xyz(1.0, 1.0, 1.0);
         let uut2 = Vec3::vec_with_xyz(1.0, 1.0, 1.0);
         uut1 += uut2;
@@ -95,7 +87,7 @@ mod test {
     }
 
     #[test]
-    fn multiply_by_scalar() {
+    fn scalar_multiplication() {
         let mut v1 = Vec3::vec_with_xyz(1.0, 1.0, 1.0);
         let v2 = Vec3::vec_with_xyz(3.0, 3.0, 3.0);
         v1 *= 3.0;
