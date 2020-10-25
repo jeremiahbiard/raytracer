@@ -14,7 +14,6 @@ pub mod create_ppm {
 
     /// Creates a simple test image
     pub fn test_image() {
-
         let image = Image(256, 256);
 
         print!("P3\n{} {}\n255\n", image.0, image.1);

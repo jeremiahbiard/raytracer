@@ -1,8 +1,32 @@
-#[derive(Default, Debug)]
+use std::ops::{Add, AddAssign};
+
+#[derive(Copy, Clone, PartialEq, PartialOrd, Default, Debug)]
 pub struct Vec3 {
     x: f64,
     y: f64,
     z: f64,
+}
+
+impl Add for Vec3 {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        Vec3 {
+            x: self.x + other.x,
+            y: self.y + other.y,
+            z: self.z + other.z,
+        }
+    }
+}
+
+impl AddAssign for Vec3 {
+    fn add_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+            z: self.z + other.z,
+        };
+    }
 }
 
 impl Vec3 {
@@ -10,13 +34,20 @@ impl Vec3 {
         Vec3::default()
     }
 
+    /// Creates a new Vec3 with x, y, and z coords
     pub fn vec_with_xyz(x: f64, y: f64, z: f64) -> Vec3 {
-        Vec3 {
-            x,
-            y,
-            z,
-        }
+        Vec3 { x, y, z }
     }
+
+    pub fn scalar_multiply(&mut self, s: f64) {
+        *self = Self {
+        x: self.x * s,
+        y: self.y * s,
+        z: self.z * s,
+        };
+    }
+
+
 }
 
 #[cfg(test)]
@@ -29,5 +60,35 @@ mod test {
         assert_eq!(test_vec.x, 0.0);
         assert_eq!(test_vec.y, 0.0);
         assert_eq!(test_vec.z, 0.0);
+    }
+
+    #[test]
+    fn add_two_vectors() {
+        let uut1 = Vec3::vec_with_xyz(0.5, 0.5, 0.5);
+        let uut2 = Vec3::vec_with_xyz(1.0, 1.0, 1.0);
+        assert_eq!(
+            uut1 + uut2,
+            Vec3 {
+                x: 1.5,
+                y: 1.5,
+                z: 1.5
+            }
+        );
+    }
+
+    #[test]
+    fn vec3_add_assign() {
+        let mut uut1 = Vec3::vec_with_xyz(1.0, 1.0, 1.0);
+        let uut2 = Vec3::vec_with_xyz(1.0, 1.0, 1.0);
+        uut1 += uut2;
+        assert_eq!(uut1, Vec3::vec_with_xyz(2.0, 2.0, 2.0));
+    }
+
+    #[test]
+    fn multiply_by_scalar() {
+        let mut v1 = Vec3::vec_with_xyz(1.0, 1.0, 1.0);
+        let v2 = Vec3::vec_with_xyz(3.0, 3.0, 3.0);
+        v1.scalar_multiply(3.0);
+        assert_eq!(v1, v2);
     }
 }
