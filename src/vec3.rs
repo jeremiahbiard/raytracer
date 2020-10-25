@@ -41,6 +41,7 @@ impl MulAssign<f64> for Vec3 {
     }
 }
 
+#[allow(dead_code)]
 impl Vec3 {
     pub fn new() -> Vec3 {
         Vec3::default()
@@ -49,6 +50,18 @@ impl Vec3 {
     /// Creates a new Vec3 with x, y, and z coords
     pub fn vec_with_xyz(x: f64, y: f64, z: f64) -> Vec3 {
         Vec3 { x, y, z }
+    }
+
+    pub fn unit_vector() -> Vec3 {
+        Vec3 { x: 1.0, y: 1.0, z: 1.0 }
+    }
+
+    pub fn length(self) -> f64 {
+        self.length_squared().sqrt()
+    }
+
+    fn length_squared(self) -> f64 {
+        self.x * self.x + self.y * self.y + self.z * self.z
     }
 }
 
@@ -92,5 +105,19 @@ mod test {
         let v2 = Vec3::vec_with_xyz(3.0, 3.0, 3.0);
         v1 *= 3.0;
         assert_eq!(v1, v2);
+    }
+    
+    #[test]
+    fn length() {
+        let v1 = Vec3::unit_vector();
+        assert_eq!(v1.length(), 1.7320508075688772);
+        let v2 = Vec3::default();
+        assert_eq!(v2.length(), 0.0);
+    }
+
+    #[test]
+    fn length_squared() {
+        let v1 = Vec3::unit_vector();
+        assert_eq!(v1.length_squared(), 3.0);
     }
 }
