@@ -18,8 +18,6 @@ struct Image {
     width: u16,
 }
 
-
-
 impl Camera {
     pub fn new(origin: Point3, horizontal: Vec3, vertical: Vec3, lower_left: Vec3) -> Camera {
         Camera {
