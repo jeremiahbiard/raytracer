@@ -33,7 +33,7 @@ fn main() {
 
     // Image
     let aspect_ratio = 16.0 / 9.0;
-    let image_width = 1600;
+    let image_width = 1280;
     let image_height = (image_width as f64 / aspect_ratio) as u16;
 
     let image = Image{width: image_width, height: image_height};
@@ -57,7 +57,7 @@ fn main() {
         eprintln!("\rScanlines remaining: {}", j);
         for i in 0..image.width {
             let u = i as f64 / (image.width - 1) as f64;
-            let v = j as f64 / (image.width - 1) as f64;
+            let v = j as f64 / (image.height - 1) as f64;
             let r = Ray::new(origin, lower_left + u * horizontal + v * vertical - origin);
             let pixel_color = Ray::ray_color(r);
             renderer::write_pixel(pixel_color);
