@@ -17,9 +17,9 @@ fn hit_sphere(center: Point3, radius: f64, ray: &Ray) -> f64 {
     let c = Vec3::dot_product(oc, oc) - radius * radius;
     let discriminant = b * b - 4.0 * a * c;
     if discriminant < 0. {
-        return -1.0;
+        -1.0
     } else {
-        return (-b - discriminant.sqrt()) / (2.0 * a);
+        (-b - discriminant.sqrt()) / (2.0 * a)
     }
 }
 

@@ -48,7 +48,7 @@ fn main() {
     let vertical = Vec3::with_xyz(0.0, viewport_height, 0.0);
     let lower_left = origin - horizontal / 2.0 - vertical / 2.0 - Vec3::with_xyz(0.0, 0.0, focal_length);
 
-    let camera = Camera { origin, horizontal, vertical, lower_left};
+    let _camera = Camera { origin, horizontal, vertical, lower_left};
 
     // Render
     print!("P3\n{} {}\n255\n", image.width, image.height);
