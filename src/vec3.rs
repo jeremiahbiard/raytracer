@@ -1,7 +1,5 @@
 use std::ops::*;
 
-// extern crate math;
-
 #[derive(Copy, Clone, PartialEq, PartialOrd, Default, Debug)]
 pub struct Vec3 {
     x: f64,
