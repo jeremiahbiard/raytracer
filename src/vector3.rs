@@ -1,6 +1,9 @@
 use core::fmt;
 use std::ops;
 
+pub type Point3 = Vector3;
+pub type Color3 = Vector3;
+
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub struct Vector3 {
     x: f64,
@@ -11,6 +14,18 @@ pub struct Vector3 {
 impl fmt::Display for Vector3 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{{{:}, {:}, {:}}}", self.x, self.y, self.z)
+    }
+}
+
+impl ops::Add<Vector3> for Vector3 {
+    type Output = Vector3;
+
+    fn add(self, _rhs: Vector3) -> Vector3 {
+        Vector3 {
+            x: self.x + _rhs.x,
+            y: self.y + _rhs.y,
+            z: self.z + _rhs.z,
+        }
     }
 }
 
@@ -25,11 +40,34 @@ impl ops::Mul<f64> for Vector3 {
     }
 }
 
+impl ops::Mul<Vector3> for f64 {
+    type Output = Vector3;
+    fn mul(self, _rhs: Vector3) -> Vector3 {
+        Vector3 {
+            x: self * _rhs.x,
+            y: self * _rhs.y,
+            z: self * _rhs.z,
+        }
+    }
+}
+
 impl ops::Div<f64> for Vector3 {
     type Output = Vector3;
 
     fn div(self, _rhs: f64) -> Vector3 {
         self * (1. / _rhs)
+    }
+}
+
+impl ops::Sub<Vector3> for Vector3 {
+    type Output = Vector3;
+
+    fn sub(self, _rhs: Vector3) -> Vector3 {
+        Vector3 {
+            x: self.x - _rhs.x,
+            y: self.y - _rhs.y,
+            z: self.z - _rhs.z,
+        }
     }
 }
 
@@ -58,6 +96,18 @@ impl Vector3 {
             y: (u.z * v.x) - (u.x * v.z),
             z: (u.x * v.y) - (u.y * v.x),
         }
+    }
+
+    pub fn x(&self) -> f64 {
+        self.x
+    }
+
+    pub fn y(&self) -> f64 {
+        self.y
+    }
+
+    pub fn z(&self) -> f64 {
+        self.z
     }
 
     #[inline]
