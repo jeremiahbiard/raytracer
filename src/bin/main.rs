@@ -5,10 +5,30 @@ use std::path::Path;
 use raytracer::ray::*;
 use raytracer::vector3::*;
 
-fn ray_color(r: &Ray) -> Color3 {
-    let unit_direction = Vector3::unit_vector(r.direction());
-    let t = 0.5 * (unit_direction.y() + 1.0);
-    (1.0 - t) * Color3::new(1.0, 1.0, 1.0) + (t * Color3::new(0.5, 0.7, 1.0))
+fn ray_color(r: Ray) -> Color3 {
+    let t = hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, r);
+    if t > 0.0 {
+        let n = Vector3::unit_vector(r.at(t) - Vector3::new(0., 0., -1.0));
+        0.5 * Color3::new(n.x() + 1.0, n.y() + 1.0, n.z() + 01.0)
+        // Color3::new(1.0, 0., 0.)
+    } else {
+        let unit_direction = Vector3::unit_vector(r.direction());
+        let t = 0.5 * (unit_direction.y() + 1.0);
+        (1.0 - t) * Color3::new(1.0, 1.0, 1.0) + (t * Color3::new(0.5, 0.7, 1.0))
+    }
+}
+
+fn hit_sphere(center: Point3, radius: f64, r: Ray) -> f64 {
+    let oc = r.origin() - center;
+    let a = Vector3::dot(&r.direction(), &r.direction());
+    let b = 2.0 * Vector3::dot(&oc, &r.direction());
+    let c = (Vector3::dot(&oc, &oc)) - radius * radius;
+    let discriminant = (b * b) - (4.0 * a * c);
+    if discriminant < 0.0 {
+        -1.0
+    } else {
+        (-b - discriminant.sqrt()) / (2.0 * a)
+    }
 }
 fn main() {
     // Image
@@ -43,7 +63,7 @@ fn main() {
                 origin,
                 lower_left_corner + u * horizontal + v * vertical - origin,
             );
-            let pixel_color = ray_color(&r);
+            let pixel_color = ray_color(r);
             // let r = i as f64 / (IMG_WIDTH - 1) as f64;
             // let g = j as f64 / (IMG_HEIGHT - 1) as f64;
             // let b = 0.25;
