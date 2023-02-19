@@ -8,6 +8,7 @@ fn main() {
     print!("P3\n{} {}\n255\n", IMG_WIDTH, IMG_HEIGHT);
 
     for j in (0..IMG_HEIGHT - 1).rev() {
+        eprintln!("{} Scanlines remaining...", j);
         for i in 0..IMG_WIDTH {
             let r = i as f32 / (IMG_WIDTH - 1) as f32;
             let g = j as f32 / (IMG_HEIGHT - 1) as f32;
@@ -20,4 +21,5 @@ fn main() {
             println!("{} {} {}", ir, ig, ib);
         }
     }
+    eprintln!("Finished!");
 }
