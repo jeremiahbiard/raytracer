@@ -4,7 +4,7 @@ use std::ops;
 pub type Point3 = Vector3;
 pub type Color3 = Vector3;
 
-#[derive(PartialEq, Debug, Clone, Copy)]
+#[derive(PartialEq, Debug, Default, Clone, Copy)]
 pub struct Vector3 {
     x: f64,
     y: f64,
@@ -17,6 +17,17 @@ impl fmt::Display for Vector3 {
     }
 }
 
+impl ops::Neg for Vector3 {
+    type Output = Self;
+
+    fn neg(self) -> Self {
+        Vector3 {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
+        }
+    }
+}
 impl ops::Add<Vector3> for Vector3 {
     type Output = Vector3;
 
