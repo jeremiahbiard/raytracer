@@ -87,6 +87,14 @@ impl Vector3 {
         Vector3 { x, y, z }
     }
 
+    pub fn zero() -> Self {
+        Vector3 {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        }
+    }
+
     pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
     }
