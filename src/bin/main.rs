@@ -55,7 +55,7 @@ fn main() {
     let camera = Camera::new();
 
     // Render
-    let x: f64 = rand::random();
+    // let x: f64 = rand::random();
 
     let mut data: [u8; IMG_SIZE] = [0; IMG_SIZE];
     let mut index: usize = 0;
@@ -63,23 +63,20 @@ fn main() {
         println!("{} scanlines left...", j);
         for i in 0..IMG_WIDTH {
             let mut pixel_color = Color3::zero();
-            for s in 0..SAMPLES_PER_PIXEL {
-                let u = (i * )
-            } 
-            let u = i as f64 / (IMG_WIDTH - 1) as f64;
-            let v = j as f64 / (IMG_HEIGHT - 1) as f64;
-            let r = Ray::new(
-                origin,
-                lower_left_corner + u * horizontal + v * vertical - origin,
-            );
-            let pixel_color = ray_color(r, &world);
+            for _ in 0..SAMPLES_PER_PIXEL {
+                let random_f64: f64 = rng.gen();
+                let u = (i as f64 + random_f64) / (IMG_WIDTH - 1) as f64;
+                let v = (j as f64 + random_f64) / (IMG_HEIGHT - 1) as f64;
+                let r = camera.get_ray(u, v);
+                pixel_color = pixel_color + ray_color(r, &world);
+            }
 
             // write_color
             let mut r = pixel_color.x();
             let mut g = pixel_color.y();
             let mut b = pixel_color.z();
 
-            let scale = 1.0 / SAMPLES_PER_PIXEL;
+            let scale = 1.0 / SAMPLES_PER_PIXEL as f64;
             r *= scale;
             g *= scale;
             b *= scale;
