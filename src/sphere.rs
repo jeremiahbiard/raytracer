@@ -28,9 +28,9 @@ impl Hittable for Sphere {
                 return false;
             }
         }
-        hr.set_t(root);
-        hr.set_p(ray.at(hr.t()));
-        let outward_normal = (hr.p() - self.center) / self.radius;
+        hr.t = root;
+        hr.p = ray.at(hr.t);
+        let outward_normal = (hr.p - self.center) / self.radius;
         hr.set_face_normal(ray, outward_normal);
         true
     }

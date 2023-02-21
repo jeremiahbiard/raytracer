@@ -2,10 +2,9 @@ use std::fs::File;
 use std::io::BufWriter;
 use std::path::Path;
 
-use raytracer::hittable::*;
 use raytracer::ray::*;
-use raytracer::sphere::*;
 use raytracer::vector3::*;
+
 fn ray_color(r: Ray) -> Color3 {
     let t = hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, r);
     if t > 0.0 {
