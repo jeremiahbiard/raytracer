@@ -1,3 +1,4 @@
+#![warn(clippy::needless_borrow)]
 use crate::ray::*;
 use crate::vector3::*;
 #[derive(Clone, Copy, Default)]
@@ -59,6 +60,7 @@ impl HitRecord {
         }
     }
 
+    #[inline]
     pub fn set_front_face(&mut self, v: bool) {
         self.front_face = v
     }
