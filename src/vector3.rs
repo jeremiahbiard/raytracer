@@ -1,4 +1,5 @@
 use core::fmt;
+use rand::random;
 use std::ops;
 
 pub type Point3 = Vector3;
@@ -132,6 +133,14 @@ impl Vector3 {
     #[inline]
     pub fn unit_vector(v: Vector3) -> Vector3 {
         v / v.length()
+    }
+
+    #[inline]
+    pub fn random() -> Vector3 {
+        let x: f64 = random();
+        let y: f64 = random();
+        let z: f64 = random();
+        Vector3 { x, y, z }
     }
 }
 

@@ -35,6 +35,10 @@ fn hit_sphere(center: Point3, radius: f64, r: Ray) -> f64 {
 }
 */
 fn main() {
+    let temp = Vector3::random();
+    println!("{}", temp);
+    return;
+
     let mut rng = rand::thread_rng();
     // Image
     const IMG_WIDTH: u32 = 1920;
@@ -64,9 +68,10 @@ fn main() {
         for i in 0..IMG_WIDTH {
             let mut pixel_color = Color3::zero();
             for _ in 0..SAMPLES_PER_PIXEL {
-                let random_f64: f64 = rng.gen();
-                let u = (i as f64 + random_f64) / (IMG_WIDTH - 1) as f64;
-                let v = (j as f64 + random_f64) / (IMG_HEIGHT - 1) as f64;
+                let u_rand: f64 = rng.gen();
+                let v_rand: f64 = rng.gen();
+                let u = (i as f64 + u_rand) / (IMG_WIDTH - 1) as f64;
+                let v = (j as f64 + v_rand) / (IMG_HEIGHT - 1) as f64;
                 let r = camera.get_ray(u, v);
                 pixel_color = pixel_color + ray_color(r, &world);
             }
