@@ -8,11 +8,17 @@ use raytracer::hittable::*;
 use raytracer::ray::*;
 use raytracer::sphere::*;
 use raytracer::vector3::*;
+use raytracer::{write_color, SAMPLES_PER_PIXEL};
+
+const IMG_WIDTH: u32 = 100;
+const IMG_HEIGHT: u32 = (IMG_WIDTH as f64 / ASPECT_RATIO) as u32;
+const IMG_SIZE: usize = (IMG_HEIGHT * IMG_WIDTH * 3) as usize;
+const MAX_DEPTH: u32 = 50;
 
 fn ray_color(r: Ray, world: &HittableList, depth: u32) -> Color3 {
     let mut hit_record = HitRecord::new();
 
-    if depth <= 0 {
+    if depth == 0 {
         return Color3::new(0.0, 0.0, 0.0);
     }
 
@@ -30,30 +36,9 @@ fn ray_color(r: Ray, world: &HittableList, depth: u32) -> Color3 {
         (1.0 - t) * Color3::new(1.0, 1.0, 1.0) + (t * Color3::new(0.5, 0.7, 1.0))
     }
 }
-/*
-fn hit_sphere(center: Point3, radius: f64, r: Ray) -> f64 {
-    let oc = r.origin() - center;
-    let a = r.direction().length_squared();
-    let half_b = Vector3::dot(&oc, &r.direction());
-    let c = oc.length_squared() - (radius * radius);
-    let discriminant = (half_b * half_b) - (a * c);
-    if discriminant < 0.0 {
-        -1.0
-    } else {
-        (-half_b - discriminant.sqrt()) / a
-    }
-}
-*/
 fn main() {
     let mut rng = rand::thread_rng();
     // Image
-    const IMG_WIDTH: u32 = 640;
-    const IMG_HEIGHT: u32 = (IMG_WIDTH as f64 / ASPECT_RATIO) as u32;
-    const IMG_SIZE: usize = (IMG_HEIGHT * IMG_WIDTH * 3) as usize;
-    const SAMPLES_PER_PIXEL: u32 = 100;
-    const MAX_DEPTH: u32 = 50;
-
-    const MN: f64 = 256.0;
 
     // World
     let mut world: HittableList = HittableList::default();
@@ -84,21 +69,9 @@ fn main() {
             }
 
             // write_color
-            let mut r = pixel_color.x();
-            let mut g = pixel_color.y();
-            let mut b = pixel_color.z();
+            write_color(&mut data, index, pixel_color);
 
-            let scale = 1.0 / SAMPLES_PER_PIXEL as f64;
-            r *= scale;
-            g *= scale;
-            b *= scale;
-
-            data[index] = (MN * raytracer::clamp(r, 0.0, 0.999)) as u8; //(MN * r) as u8;
-            index += 1;
-            data[index] = (MN * raytracer::clamp(g, 0.0, 0.999)) as u8; // (MN * g) as u8;
-            index += 1;
-            data[index] = (MN * raytracer::clamp(b, 0.0, 0.999)) as u8; // (MN * b) as u8;
-            index += 1;
+            index += 3;
         }
     }
     println!("Finished!");
