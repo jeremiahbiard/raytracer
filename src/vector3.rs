@@ -1,5 +1,5 @@
 use core::fmt;
-use rand::random;
+use rand::prelude::*;
 use std::ops;
 
 pub type Point3 = Vector3;
@@ -137,10 +137,28 @@ impl Vector3 {
 
     #[inline]
     pub fn random() -> Vector3 {
-        let x: f64 = random();
-        let y: f64 = random();
-        let z: f64 = random();
+        let mut rng = rand::thread_rng();
+        let x: f64 = rng.gen();
+        let y: f64 = rng.gen();
+        let z: f64 = rng.gen();
         Vector3 { x, y, z }
+    }
+
+    #[inline]
+    pub fn random_in_range(min: f64, max: f64) -> Vector3 {
+        let mut rng = rand::thread_rng();
+        let x: f64 = rng.gen_range(min..max);
+        let y: f64 = rng.gen_range(min..max);
+        let z: f64 = rng.gen_range(min..max);
+        Vector3 { x, y, z }
+    }
+
+    pub fn random_in_unit_sphere() -> Vector3 {
+        let mut p = Vector3::random_in_range(-1.0, 1.0);
+        while p.length_squared() >= 1.0 {
+            p = Vector3::random_in_range(-1.0, 1.0);
+        }
+        p
     }
 }
 

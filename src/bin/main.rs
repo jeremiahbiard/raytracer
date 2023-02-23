@@ -5,14 +5,25 @@ use std::path::Path;
 use rand::prelude::*;
 use raytracer::camera::*;
 use raytracer::hittable::*;
-use raytracer::ray::Ray;
+use raytracer::ray::*;
 use raytracer::sphere::*;
 use raytracer::vector3::*;
 
-fn ray_color(r: Ray, world: &HittableList) -> Color3 {
+fn ray_color(r: Ray, world: &HittableList, depth: u32) -> Color3 {
     let mut hit_record = HitRecord::new();
+
+    if depth <= 0 {
+        return Color3::new(0.0, 0.0, 0.0);
+    }
+
     if world.hit(r, 0.0, std::f64::INFINITY, &mut hit_record) {
-        0.5 * (hit_record.normal + Color3::new(1.0, 1.0, 1.0))
+        let target = hit_record.p + hit_record.normal + Vector3::random_in_unit_sphere();
+        // 0.5 * (hit_record.normal + Color3::new(1.0, 1.0, 1.0))
+        0.5 * ray_color(
+            Ray::new(hit_record.p, target - hit_record.p),
+            world,
+            depth - 1,
+        )
     } else {
         let unit_direction = Vector3::unit_vector(r.direction());
         let t = 0.5 * (unit_direction.y() + 1.0);
@@ -36,10 +47,11 @@ fn hit_sphere(center: Point3, radius: f64, r: Ray) -> f64 {
 fn main() {
     let mut rng = rand::thread_rng();
     // Image
-    const IMG_WIDTH: u32 = 1920;
+    const IMG_WIDTH: u32 = 640;
     const IMG_HEIGHT: u32 = (IMG_WIDTH as f64 / ASPECT_RATIO) as u32;
     const IMG_SIZE: usize = (IMG_HEIGHT * IMG_WIDTH * 3) as usize;
     const SAMPLES_PER_PIXEL: u32 = 100;
+    const MAX_DEPTH: u32 = 50;
 
     const MN: f64 = 256.0;
 
@@ -68,7 +80,7 @@ fn main() {
                 let u = (i as f64 + u_rand) / (IMG_WIDTH - 1) as f64;
                 let v = (j as f64 + v_rand) / (IMG_HEIGHT - 1) as f64;
                 let r = camera.get_ray(u, v);
-                pixel_color = pixel_color + ray_color(r, &world);
+                pixel_color = pixel_color + ray_color(r, &world, MAX_DEPTH);
             }
 
             // write_color
