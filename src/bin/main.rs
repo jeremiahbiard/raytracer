@@ -5,8 +5,7 @@ use std::path::Path;
 use rand::prelude::*;
 use raytracer::camera::*;
 use raytracer::hittable::*;
-use raytracer::ray;
-use raytracer::ray::*;
+use raytracer::ray::Ray;
 use raytracer::sphere::*;
 use raytracer::vector3::*;
 
