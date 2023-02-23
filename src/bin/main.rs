@@ -35,10 +35,6 @@ fn hit_sphere(center: Point3, radius: f64, r: Ray) -> f64 {
 }
 */
 fn main() {
-    let temp = Vector3::random();
-    println!("{}", temp);
-    return;
-
     let mut rng = rand::thread_rng();
     // Image
     const IMG_WIDTH: u32 = 1920;
