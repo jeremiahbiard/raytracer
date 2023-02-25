@@ -28,10 +28,10 @@ impl Hittable for HittableList {
     fn hit(&self, ray: Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool {
         let mut hit_anything = false;
         let mut closest_so_far = t_max;
-        let mut rec = rec;
+        let rec = rec;
 
         for object in self.objects.iter() {
-            if object.hit(ray, t_min, closest_so_far, &mut rec) {
+            if object.hit(ray, t_min, closest_so_far, rec) {
                 hit_anything = true;
                 closest_so_far = rec.t;
             }
