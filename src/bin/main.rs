@@ -3,6 +3,8 @@ use std::io::BufWriter;
 use std::path::Path;
 
 use rand::prelude::*;
+use rayon::prelude::*;
+
 use raytracer::camera::*;
 use raytracer::hittable::*;
 use raytracer::ray::*;
@@ -53,7 +55,7 @@ fn main() {
     // Render
     // let x: f64 = rand::random();
 
-    let mut data: [u8; IMG_SIZE] = [0; IMG_SIZE];
+    let mut pixels: [u8; IMG_SIZE] = [0; IMG_SIZE];
     let mut index: usize = 0;
     for j in (0..IMG_HEIGHT).rev() {
         println!("{} scanlines left...", j);
@@ -69,7 +71,7 @@ fn main() {
             }
 
             // write_color
-            write_color(&mut data, index, pixel_color);
+            write_color(&mut pixels, index, pixel_color);
 
             index += 3;
         }
@@ -88,5 +90,5 @@ fn main() {
 
     let mut writer = encoder.write_header().unwrap();
 
-    writer.write_image_data(&data).unwrap();
+    writer.write_image_data(&pixels).unwrap();
 }
