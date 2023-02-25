@@ -1,6 +1,6 @@
-#![warn(clippy::needless_borrow)]
 use crate::ray::*;
 use crate::vector3::*;
+
 #[derive(Clone, Copy, Default)]
 pub struct HitRecord {
     pub p: Point3,
@@ -17,6 +17,8 @@ pub trait Hittable {
 pub struct HittableList {
     objects: Vec<Box<dyn Hittable>>,
 }
+
+unsafe impl Sync for HittableList {}
 
 impl HittableList {
     pub fn add(&mut self, hittable: Box<dyn Hittable>) {

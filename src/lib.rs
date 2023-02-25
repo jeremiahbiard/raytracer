@@ -5,22 +5,23 @@ pub mod sphere;
 pub mod vector3;
 
 pub mod prelude {
-    use std::fs::File;
-    use std::io::BufWriter;
-    use std::path::Path;
-    pub const IMG_WIDTH: u32 = 100;
-    pub const IMG_HEIGHT: u32 = (IMG_WIDTH as f64 / ASPECT_RATIO) as u32;
-    const IMG_SIZE: usize = (IMG_HEIGHT * IMG_WIDTH * 3) as usize;
-    const MAX_DEPTH: u32 = 50;
-
     use super::camera::*;
     use super::hittable::*;
     use super::ray::*;
     use super::vector3::Color3;
 
-    use rand::prelude::*;
+    use std::fs::File;
+    use std::io::BufWriter;
+    use std::path::Path;
+    use std::time::Instant;
 
+    use rand::prelude::*;
     use rayon::prelude::*;
+
+    const IMG_WIDTH: u32 = 1920;
+    const IMG_HEIGHT: u32 = (IMG_WIDTH as f64 / ASPECT_RATIO) as u32;
+    const IMG_SIZE: usize = (IMG_HEIGHT * IMG_WIDTH * 3) as usize;
+    const MAX_DEPTH: u32 = 50;
 
     const MN: f64 = 256.0;
     const SAMPLES_PER_PIXEL: u32 = 100;
@@ -52,9 +53,9 @@ pub mod prelude {
     }
 
     fn render_line(pixels: &mut [u8], camera: &Camera, scene: &HittableList, row: u32) {
-        println!("{} scanlines remaining", row);
+        let mut rng = rand::thread_rng();
+
         for col in 0..IMG_WIDTH {
-            let mut rng = rand::thread_rng();
             let mut pixel_color = Color3::zero();
             for _ in 0..SAMPLES_PER_PIXEL {
                 // let u_rand: f64 = rng.gen();
@@ -65,16 +66,25 @@ pub mod prelude {
                 pixel_color = pixel_color + ray_color(r, scene, MAX_DEPTH);
             }
 
-            let index = ((row * IMG_WIDTH + (col * 3)) + row * IMG_WIDTH * 2) as usize;
+            let index = (col * 3) as usize;
             write_color(pixels, pixel_color, index);
         }
     }
 
     pub fn render(camera: &Camera, scene: &HittableList) {
-        let mut pixels: [u8; IMG_SIZE] = [0; IMG_SIZE];
-        for row in (0..IMG_HEIGHT).rev() {
-            render_line(&mut pixels, camera, scene, row);
-        }
+        // let mut pixels: [u8; IMG_SIZE] = [0; IMG_SIZE];
+        let start = Instant::now();
+        let mut pixels = vec![0; IMG_SIZE];
+
+        let rows: Vec<(usize, &mut [u8])> = pixels
+            .chunks_mut((IMG_WIDTH * 3) as usize)
+            .enumerate()
+            .collect();
+
+        rows.into_par_iter()
+            .for_each(|(i, row)| render_line(row, camera, scene, i as u32));
+        let render_time = start.elapsed().as_secs_f64();
+        println!("Render completed in {:.2} seconds", render_time);
         write_image(&pixels);
     }
 
@@ -90,6 +100,8 @@ pub mod prelude {
 
         let mut writer = encoder.write_header().unwrap();
 
-        writer.write_image_data(pixels).unwrap();
+        writer
+            .write_image_data(pixels)
+            .expect("Error writing PNG file");
     }
 }

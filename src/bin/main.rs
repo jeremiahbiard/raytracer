@@ -1,7 +1,7 @@
-use raytracer::camera::*;
-use raytracer::hittable::*;
-use raytracer::sphere::*;
-use raytracer::vector3::*;
+use raytracer::camera::Camera;
+use raytracer::hittable::HittableList;
+use raytracer::sphere::Sphere;
+use raytracer::vector3::Point3;
 
 use raytracer::prelude::*;
 
@@ -15,6 +15,4 @@ fn main() {
     let camera = Camera::new();
 
     render(&camera, &scene);
-
-    println!("Finished!");
 }
