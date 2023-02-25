@@ -160,6 +160,10 @@ impl Vector3 {
         }
         p
     }
+
+    pub fn random_unit_vector() -> Vector3 {
+        Vector3::unit_vector(Vector3::random_in_unit_sphere())
+    }
 }
 
 #[cfg(test)]
