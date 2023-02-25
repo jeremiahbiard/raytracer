@@ -32,7 +32,7 @@ pub fn ray_color(r: Ray, world: &HittableList, depth: u32) -> Color3 {
         return Color3::new(0.0, 0.0, 0.0);
     }
 
-    if world.hit(r, 0.0, std::f64::INFINITY, &mut hit_record) {
+    if world.hit(r, 0.001, std::f64::INFINITY, &mut hit_record) {
         let target = hit_record.p + hit_record.normal + Vector3::random_in_unit_sphere();
         // 0.5 * (hit_record.normal + Color3::new(1.0, 1.0, 1.0))
         0.5 * ray_color(

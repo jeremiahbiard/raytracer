@@ -20,7 +20,7 @@ pub mod prelude {
     use rayon::prelude::*;
     use std::sync::Mutex;
 
-    const IMG_WIDTH: u32 = 1280;
+    const IMG_WIDTH: u32 = 640;
     const IMG_HEIGHT: u32 = (IMG_WIDTH as f64 / ASPECT_RATIO) as u32;
     const IMG_SIZE: usize = (IMG_HEIGHT * IMG_WIDTH * 3) as usize;
     const MAX_DEPTH: u32 = 50;
@@ -44,10 +44,12 @@ pub mod prelude {
         let mut g = pixel_color.y();
         let mut b = pixel_color.z();
 
+        // Divide the color by the number of samples and gamma-correct for gamma = 2.0
         let scale = 1.0 / SAMPLES_PER_PIXEL as f64;
-        r *= scale;
-        g *= scale;
-        b *= scale;
+
+        r = (scale * r).sqrt();
+        g = (scale * g).sqrt();
+        b = (scale * b).sqrt();
 
         pixels[index] = (MN * clamp(r, 0.0, 0.999)) as u8; //(MN * r) as u8;
         pixels[index + 1] = (MN * clamp(g, 0.0, 0.999)) as u8; // (MN * g) as u8;
