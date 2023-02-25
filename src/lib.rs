@@ -15,8 +15,10 @@ pub mod prelude {
     use std::path::Path;
     use std::time::Instant;
 
+    use linya::{Bar, Progress};
     use rand::prelude::*;
     use rayon::prelude::*;
+    use std::sync::Mutex;
 
     const IMG_WIDTH: u32 = 1920;
     const IMG_HEIGHT: u32 = (IMG_WIDTH as f64 / ASPECT_RATIO) as u32;
