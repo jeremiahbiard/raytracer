@@ -20,7 +20,7 @@ pub mod prelude {
     use rayon::prelude::*;
     use std::sync::Mutex;
 
-    const IMG_WIDTH: u32 = 1920;
+    const IMG_WIDTH: u32 = 1280;
     const IMG_HEIGHT: u32 = (IMG_WIDTH as f64 / ASPECT_RATIO) as u32;
     const IMG_SIZE: usize = (IMG_HEIGHT * IMG_WIDTH * 3) as usize;
     const MAX_DEPTH: u32 = 50;
@@ -54,9 +54,15 @@ pub mod prelude {
         pixels[index + 2] = (MN * clamp(b, 0.0, 0.999)) as u8; // (MN * b) as u8;
     }
 
-    fn render_line(pixels: &mut [u8], camera: &Camera, scene: &HittableList, row: u32) {
+    fn render_line(
+        pixels: &mut [u8],
+        camera: &Camera,
+        scene: &HittableList,
+        row: u32,
+        progress: &Mutex<Progress>,
+        bar: &Bar,
+    ) {
         let mut rng = rand::thread_rng();
-
         for col in 0..IMG_WIDTH {
             let mut pixel_color = Color3::zero();
             for _ in 0..SAMPLES_PER_PIXEL {
@@ -70,6 +76,7 @@ pub mod prelude {
 
             let index = (col * 3) as usize;
             write_color(pixels, pixel_color, index);
+            progress.lock().unwrap().inc_and_draw(bar, 1);
         }
     }
 
@@ -82,9 +89,14 @@ pub mod prelude {
             .chunks_mut((IMG_WIDTH * 3) as usize)
             .enumerate()
             .collect();
-
-        rows.into_par_iter()
-            .for_each(|(i, row)| render_line(row, camera, scene, i as u32));
+        let progress = Mutex::new(Progress::new());
+        rows.into_par_iter().for_each(|(i, row)| {
+            let bar: Bar = progress
+                .lock()
+                .unwrap()
+                .bar(IMG_WIDTH as usize, format!("Rendering chunk {}", i));
+            render_line(row, camera, scene, i as u32, &progress, &bar);
+        });
         let render_time = start.elapsed().as_secs_f64();
         println!("Render completed in {:.2} seconds", render_time);
         write_image(&pixels);
